@@ -9,7 +9,7 @@ listInfo = {
     "Popular100": ("https://www.imdb.com/chart/moviemeter/?ref_=nv_mv_mpm", "chart-moviemeter") 
 }
 
-def listParsing(table):
+def listParsing(table, isPopular100List):
     global base_url
     movie_title, movie_link, IMDb_rating = [], [], []
     tbody = table.find("tbody")
@@ -21,10 +21,18 @@ def listParsing(table):
             if (cell.get("class") == ["titleColumn"]):
                 content = list(filter((lambda x: len(x) > 0), cell.text.split("\n")))
                 content = [text.lstrip() for text in content]
-                # content looks as ['1.', 'The Shawshank Redemption', '(1994)']
-
-                movie_title.append(content[1])
-                produced_year = int(content[2][1:-1])
+                # content looks as ['1.', 'The Shawshank Redemption', '(1994)'] for Top250 and Lowest100
+                #                  ['The Super Mario Bros. Movie', '(2023)', '1', '(no change)'] for Popular100
+                
+                title, produced_year = None, None
+                if isPopular100List:
+                    title = content[0]
+                    produced_year = int(content[1][1:-1])
+                else:
+                    title = content[1]
+                    produced_year = int(content[2][1:-1])
+                    
+                movie_title.append(title)
 
                 ref = cell.find("a")
                 url_link = urljoin(base_url, ref.get("href"))
@@ -32,7 +40,10 @@ def listParsing(table):
 
             if (cell.get("class") == ["ratingColumn", "imdbRating"]):
                 content = list(filter((lambda x: len(x) > 0), cell.text.split("\n")))
-                IMDb_rating.append(float(content[0]))
+                if (len(content) > 0):
+                    IMDb_rating.append(float(content[0]))
+                else:
+                    IMDb_rating.append(None)
                 
     return movie_title, movie_link, IMDb_rating
 
@@ -43,10 +54,10 @@ def getMovieList(list_name):
     table = get_element_with_attribute(soup, "data-caller-name", chart_name)[0]
     assert(table.name == "table")
 
-    return listParsing(table)
+    return listParsing(table, list_name == "Popular100")
 
 if __name__ == "__main__":
-    movie_title, movie_link, IMDb_rating = getMovieList("Top250")
+    movie_title, movie_link, IMDb_rating = getMovieList("Popular100")
     for i, title in enumerate(movie_title):
         print(i + 1, title)
 

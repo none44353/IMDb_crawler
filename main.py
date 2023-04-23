@@ -4,7 +4,7 @@ import json
 
 list = ["Top250", "Lowest100", "Popular100"]
 
-list_name = "Top250"
+list_name = "Popular100"
 
 movieTitles, movieLinks, IMDbRatings = getMovieList(list_name)
 data = {}
