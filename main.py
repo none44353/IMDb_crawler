@@ -10,7 +10,7 @@ movieTitles, movieLinks, IMDbRatings = getMovieList(list_name)
 data = {}
 for id, (title, link) in enumerate(zip(movieTitles, movieLinks)):
     print("Loading the rating data of Movie {index}: {title} ...".format(index = id + 1, title = title))
-    data[id + 1] = (title, get_rating_by_groups_from_movieHomepage(link)) 
+    data[id + 1] = (title, get_rating_by_groups_from_movieHomepage(link) if IMDbRatings[id] != None else None) 
 
 content = json.dumps(data)
 file = open("{list_name}.json".format(list_name = list_name), "w")
