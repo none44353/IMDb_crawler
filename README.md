@@ -25,3 +25,9 @@ The crawler will dump the rating data of movies into a json file.
 ## Usage
 - Install dependencies by running: ```pip install -r requirements.txt```
 - Run the main program by executing: ```python main.py```
+
+## 为什么这个爬虫跑得很慢？
+在抓取一部电影的评分页面时，根据爬虫提供的URL，IMDb服务器可能会返回两种不同的HTML内容。其中一种是我的解析器可以分析的，另一种不是。针对这个问题，该爬虫采用的策略是：停顿一段时间（waiting_time）后重新请求页面。这导致该爬虫跑得很慢。如果您有更好的方法解决这个问题，请与我联系。
+
+## Why is this web crawler running slowly?
+When the crawler is trying to grab the rating page of a movie based on the provided URL, IMDb server may return two different types of HTML content. One type can be parsed by the crawler's parser, while the other cannot. To handle this issue, the crawler adopts a strategy of pausing for a certain amount of time (waiting_time) and then re-requesting the page. This causes the crawler to run slowly. If you have a better solution to this problem, please contact me.
